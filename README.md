@@ -17,7 +17,7 @@ A command-line tool for everyday operations in jira
     $ ih8-jira delete DEMO-555
     
 ### Set issue fields
-    $ ih8-jira set --estimate=5 --assignee=fred
+    $ ih8-jira set --estimate=5 --assignee=fred --summary="A new summary"
     
 ### Show issue details
     $ ih8-jira show --issue_id=DEMO-555
@@ -27,6 +27,9 @@ A command-line tool for everyday operations in jira
     
 ### Show all issues, regardless of sprint assignment
     $ ih8-jira show --sprint=any
+    
+### Show all issues in the current sprint that are in "To Do" and assigned to fred
+    $ ih8-jira show --section="To Do" --assignee=fred
     
 ### Move issue from "To Do" to "In Progress"
     $ ih8-jira move DEMO-555 "In Progress"
