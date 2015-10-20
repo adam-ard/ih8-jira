@@ -24,19 +24,30 @@ def handle_set_mode(options, args)
     update(form_data, { 'fields'=> {'summary' => options['summary']}})
   end
 
-  rest_put_request("rest/api/latest/issue/#{args[0]}", form_data)
+  data,err=rest_put_request("rest/api/latest/issue/#{args[0]}", form_data)
+  if err
+    return false
+  end
 
   if options['sprint']
-    data=rest_get_request("rest/greenhopper/latest/rapidview")
+    data,err=rest_get_request("rest/greenhopper/latest/rapidview")
+    if err
+      return false
+    end
     data['views'].each() do | x |
       if x['name'] == $project
-        data2=rest_get_request("rest/greenhopper/latest/sprintquery/#{x['id']}")
+        data2,err=rest_get_request("rest/greenhopper/latest/sprintquery/#{x['id']}")
+        if err
+          return false
+        end
         data2['sprints'].each() do | y |
           if y['state'] == 'ACTIVE'
             if options['sprint'] == "current"
-              data3=rest_post_request("rest/agile/1.0/sprint/#{y['id']}/issue", {"issues"=>[args[0]]})
+              data3,err=rest_post_request("rest/agile/1.0/sprint/#{y['id']}/issue", {"issues"=>[args[0]]})
+              return !err
             else
-              data3=rest_post_request("rest/agile/1.0/backlog/issue", {"issues"=>[args[0]]})
+              data3,err=rest_post_request("rest/agile/1.0/backlog/issue", {"issues"=>[args[0]]})
+              return !err
             end
           end
         end

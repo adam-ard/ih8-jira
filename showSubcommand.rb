@@ -25,7 +25,10 @@ end
 
 def jql_query(jql)
   form_data={'jql' => jql, 'startAt' => 0, 'maxResults' => -1, 'fields'=> ['summary', 'status', 'assignee']}
-  data=rest_post_request("rest/api/latest/search/", form_data)
+  data,err=rest_post_request("rest/api/latest/search/", form_data)
+  if err
+    return []
+  end
   
   sprint_list=[]
   data['issues'].each do | item |
@@ -52,13 +55,9 @@ def print_attribute(name, data, location="")
 end
 
 def print_issue(id)
-  data=rest_get_request("rest/api/latest/issue/#{id}")
-
-  if data['errorMessages']
-    data['errorMessages'].each do | error |
-      puts error
-    end
-    return
+  data, err=rest_get_request("rest/api/latest/issue/#{id}")
+  if err
+    return false
   end
 
   print_attribute("id", id)
@@ -72,6 +71,7 @@ def print_issue(id)
   if data['fields'] && data['fields']['description']
     print "\nDescription:\n#{data['fields']['description']}\n"
   end
+  return true
 end
 
 def print_sprint(assignee, section)

@@ -18,6 +18,9 @@ def handle_new_mode(options, args)
     update(form_data, { 'fields'=> {'summary' => options['summary']}})
   end
 
-  data=rest_post_request("rest/api/latest/issue/", form_data)
-  puts data['key']
+  data,err=rest_post_request("rest/api/latest/issue/", form_data)
+  unless err
+    puts data['key']
+  end
+  return !err
 end

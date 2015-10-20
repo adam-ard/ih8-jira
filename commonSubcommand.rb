@@ -32,9 +32,16 @@ def rest_request(cmd)
   client.use_ssl = true
   res=client.request(req)
   if res.body
-    JSON.parse(res.body)
+    data=JSON.parse(res.body)
+    if data['errorMessages']
+      data['errorMessages'].each do | error |
+        puts error
+      end
+      return data, true
+    end
+    return data, false
   else
-    {}
+    return {}, false
   end
 end
 
