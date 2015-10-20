@@ -24,9 +24,11 @@ def handle_set_mode(options, args)
     update(form_data, { 'fields'=> {'summary' => options['summary']}})
   end
 
-  data,err=rest_put_request("rest/api/latest/issue/#{args[0]}", form_data)
-  if err
-    return false
+  unless form_data == {}
+    data,err=rest_put_request("rest/api/latest/issue/#{args[0]}", form_data)
+    if err
+      return false
+    end
   end
 
   if options['sprint']
