@@ -1,0 +1,9 @@
+ih8-jira:
+  server: https://your_server.atlassian.net
+  sections:
+    - To Do
+    - In Progress
+    - Review
+    - Blocked
+    - Done
+  project: The Project
