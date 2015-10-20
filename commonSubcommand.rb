@@ -31,18 +31,26 @@ def rest_request(cmd)
   client=Net::HTTP.new(uri.hostname, uri.port)
   client.use_ssl = true
   res=client.request(req)
+
+  is_error = false
+  data = {}
+
+  if res.code == "404"
+    is_error = true
+    p [res.code, res.message, res.class.name]
+  end
+
   if res.body
     data=JSON.parse(res.body)
     if data['errorMessages']
       data['errorMessages'].each do | error |
         puts error
       end
-      return data, true
+      is_error = true
+      data={}
     end
-    return data, false
-  else
-    return {}, false
   end
+  return data, is_error
 end
 
 def rest_get_request(cmd)
