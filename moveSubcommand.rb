@@ -1,6 +1,3 @@
-require 'net/http'
-require 'json'
-
 require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 
 $move_usage = 'Usage: ih8-jira move <issue_id> <target_section>'

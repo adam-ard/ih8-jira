@@ -1,3 +1,5 @@
+require 'json'
+require 'net/http'
 require 'yaml'
 
 $auth_username=ENV['IH8_JIRA_USERNAME']

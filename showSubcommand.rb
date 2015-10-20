@@ -1,6 +1,3 @@
-require 'net/http'
-require 'json'
-
 require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 
 $sections=$IH8_JIRA_CONFIG['ih8-jira']['sections']

@@ -1,6 +1,3 @@
-require 'net/http'
-require 'json'
-
 require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 
 $set_usage='Usage: ih8-jira set <issue_id> [options]'
