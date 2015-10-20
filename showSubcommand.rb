@@ -16,7 +16,7 @@ def get_assignee(assignee_struct)
 end
 
 def get_last_sprint(sprint_string)
-  if sprint_string["fields"]["customfield_10007"]
+  if sprint_string['fields'] && sprint_string["fields"]["customfield_10007"]
     sprint_string["fields"]["customfield_10007"][-1].split("[")[1].split(',')[3].split('=')[1]
   else
     "unassigned"
@@ -54,6 +54,13 @@ end
 def print_issue(id)
   data=rest_get_request("rest/api/latest/issue/#{id}")
 
+  if data['errorMessages']
+    data['errorMessages'].each do | error |
+      puts error
+    end
+    return
+  end
+
   print_attribute("id", id)
   print_attribute("Summary", data, 'fields.summary')
   print_attribute("author", data, 'fields.creator.key')
@@ -62,7 +69,7 @@ def print_issue(id)
   print_attribute("estimate", data, 'fields.customfield_10004')
   print_attribute("sprint", get_last_sprint(data))
 
-  if data['fields']['description']
+  if data['fields'] && data['fields']['description']
     print "\nDescription:\n#{data['fields']['description']}\n"
   end
 end
