@@ -5,6 +5,7 @@ $auth_password=ENV['IH8_JIRA_PASSWORD']
 $IH8_JIRA_CONFIG = YAML.load_file(File.expand_path(File.dirname(__FILE__) + '/config.yml'))
 $jira_server=$IH8_JIRA_CONFIG['ih8-jira']['server']
 $project=$IH8_JIRA_CONFIG['ih8-jira']['project']
+$project_key=$IH8_JIRA_CONFIG['ih8-jira']['project_key']
 
 # takes two hashes and recursively merges them
 def update(d,u)

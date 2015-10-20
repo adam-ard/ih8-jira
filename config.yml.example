@@ -7,3 +7,4 @@ ih8-jira:
     - Blocked
     - Done
   project: The Project
+  project_key: TP

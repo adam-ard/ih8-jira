@@ -9,7 +9,7 @@ $new_argTable = [[true, 'assignee', 'a', 'new assignee'],
                  [true, 'summary', 's', 'new summary']]
 
 def handle_new_mode(options, args)
-  form_data={"fields"=> {"project"=> {"key"=> "SD"}, "issuetype"=> {"name"=> "Task"}}}
+  form_data={"fields"=> {"project"=> {"key"=> $project_key}, "issuetype"=> {"name"=> "Task"}}}
 
   unless options['estimate'].nil?
     update(form_data, { 'fields'=> {'customfield_10004' => options['estimate'].to_i }})

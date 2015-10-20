@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 
 $sections=$IH8_JIRA_CONFIG['ih8-jira']['sections']
 $show_usage = 'Usage: ih8-jira show [options]'
-$show_argTable = [[true, 'issue_id', 'i', 'This is the id of the issue you wish to view (ex SD-192)'],
+$show_argTable = [[true, 'issue_id', 'i', 'This is the id of the issue you wish to view (ex DEMO-192)'],
                   [true, 'assignee', 'a', 'Filter by assignee name'],
                   [true, 'section', 's', 'Filter by section name'],
                   [true, 'sprint', 'p', 'Filter by sprint (current, any)', 'current']]
