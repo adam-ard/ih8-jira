@@ -1,3 +1,5 @@
+require 'rainbow/ext/string'
+
 require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 
 $sections=$IH8_JIRA_CONFIG['ih8-jira']['sections']
@@ -11,7 +13,7 @@ def get_assignee(assignee_struct)
   if assignee_struct
     assignee_struct['name']
   else
-    'unassigned'
+    '-'
   end
 end
 
@@ -19,12 +21,12 @@ def get_last_sprint(sprint_string)
   if sprint_string['fields'] && sprint_string["fields"]["customfield_10007"]
     sprint_string["fields"]["customfield_10007"][-1].split("[")[1].split(',')[3].split('=')[1]
   else
-    "unassigned"
+    "-"
   end
 end
 
 def jql_query(jql)
-  form_data={'jql' => jql, 'startAt' => 0, 'maxResults' => -1, 'fields'=> ['summary', 'status', 'assignee']}
+  form_data={'jql' => jql, 'startAt' => 0, 'maxResults' => -1, 'fields'=> ['summary', 'status', 'assignee', 'labels']}
   data,err=rest_post_request("rest/api/latest/search/", form_data)
   if err
     return []
@@ -32,14 +34,14 @@ def jql_query(jql)
   
   sprint_list=[]
   data['issues'].each do | item |
-    sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee'])]
+    sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee']), item['fields']['labels']]
   end
   sprint_list
 end
 
 def print_attribute(name, data, location="")
   if data.nil?
-    print "#{format("%11s", name)}:\tnone\n"
+    puts "#{format("%11s", name)}:\tnone"
     return
   end
 
@@ -47,11 +49,11 @@ def print_attribute(name, data, location="")
   location.split(".").each do |x|
     curr_val=curr_val[x]
     if curr_val.nil?
-      print "#{format("%11s", name)}:\tnone\n"
+      puts "#{format("%11s", name)}:\tnone"
       return
     end
   end
-  print "#{format("%11s", name)}:\t#{curr_val}\n"
+  puts "#{format("%11s", name)}:\t#{curr_val}"
 end
 
 def print_issue(id)
@@ -69,7 +71,7 @@ def print_issue(id)
   print_attribute("sprint", get_last_sprint(data))
 
   if data['fields'] && data['fields']['description']
-    print "\nDescription:\n#{data['fields']['description']}\n"
+    puts "\nDescription:\n#{data['fields']['description']}"
   end
   return true
 end
@@ -112,7 +114,11 @@ def print_sprint_list(sprint_list)
     end
     item.sort_by! { |x| x[3] }
     item.each do | in_item |
-      puts "    #{format("%-7s",in_item[0])} #{format("%11s",in_item[3])} #{format("%-.60s", in_item[2])}"
+      color = :green
+      if in_item[4].include? "committed"
+        color = :red
+      end
+      puts "    #{format("%-7s",in_item[0])}".color(color) + " #{format("%11s",in_item[3])} #{format("%-.60s", in_item[2])}"
     end
   end
 end
