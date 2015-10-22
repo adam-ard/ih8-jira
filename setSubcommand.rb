@@ -37,7 +37,7 @@ def handle_set_mode(options, args)
       return false
     end
     data['views'].each() do | x |
-      if x['name'] == $project
+      if x['name'] == $board_name
         data2,err=rest_get_request("rest/greenhopper/latest/sprintquery/#{x['id']}")
         if err
           return false

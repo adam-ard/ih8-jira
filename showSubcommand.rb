@@ -78,7 +78,7 @@ def print_issue(id)
 end
 
 def print_sprint(assignee, section)
-  sprint_list=jql_query("sprint in OpenSprints() AND project = \"#{$project}\"")
+  sprint_list=jql_query("sprint in OpenSprints() AND (#{$team_query})")
 
   unless section.nil?
     sprint_list.select! { |x| x[1] == section }
@@ -92,7 +92,7 @@ def print_sprint(assignee, section)
 end
 
 def print_backlog(assignee, section)
-  sprint_list=jql_query("project = \"#{$project}\"")
+  sprint_list=jql_query($team_query)
 
   sprint_list.select! { |x| x[1] != "Done" }
   unless section.nil?

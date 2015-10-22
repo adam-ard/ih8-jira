@@ -6,5 +6,6 @@ ih8-jira:
     - Review
     - Blocked
     - Done
-  project: The Project
+  team_query: "component in (one, two, three)"
+  board_name: MyBoard
   project_key: TP
