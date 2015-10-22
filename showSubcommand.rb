@@ -69,6 +69,7 @@ def print_issue(id)
   print_attribute("status", data, 'fields.status.name')
   print_attribute("estimate", data, 'fields.customfield_10004')
   print_attribute("labels", data, 'fields.labels')
+  print_attribute("components", data['fields']['components'].map{|c| c['name']})
   print_attribute("sprint", get_last_sprint(data))
 
   if data['fields'] && data['fields']['description']
