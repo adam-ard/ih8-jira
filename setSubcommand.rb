@@ -4,7 +4,7 @@ $set_usage='Usage: ih8-jira set <issue_id> [options]'
 $set_argTable=[[true, 'assignee', 'a', 'new assignee'],
                [true, 'summary', 's', 'new summary'],
                [true, 'estimate', 'e', 'new estimate'],
-               [true, 'component', 'c', 'component'],
+               [true, 'component', 'c', 'new component'],
                [true, 'sprint', 'p', 'new sprint (backlog or current)']]
 
 
