@@ -68,8 +68,8 @@ def get_epic_name(data)
   if err
     return "ERROR: can't retrieve epic"
   end
-  if data['fields'] && data['fields']['summary']
-    data['fields']['summary']
+  if data['fields'] && data['fields']['customfield_10601']
+    data['fields']['customfield_10601']
   else
     "Error: cant retrieve epic"
   end
