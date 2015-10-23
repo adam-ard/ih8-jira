@@ -31,7 +31,7 @@ def jql_query(jql)
   if err
     return []
   end
-  
+
   sprint_list=[]
   data['issues'].each do | item |
     sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee']), item['fields']['labels']]
@@ -56,6 +56,25 @@ def print_attribute(name, data, location="")
   puts "#{format("%11s", name)}:\t#{curr_val}"
 end
 
+def get_epic_name(data)
+  id=nil
+  if data['fields'] && data['fields']['customfield_10600']
+    id=data['fields']['customfield_10600']
+  else
+    return "-"
+  end
+
+  data, err=rest_get_request("rest/api/latest/issue/#{id}")
+  if err
+    return "ERROR: can't retrieve epic"
+  end
+  if data['fields'] && data['fields']['summary']
+    data['fields']['summary']
+  else
+    "Error: cant retrieve epic"
+  end
+end
+
 def print_issue(id)
   data, err=rest_get_request("rest/api/latest/issue/#{id}")
   if err
@@ -70,11 +89,13 @@ def print_issue(id)
   print_attribute("estimate", data, 'fields.customfield_10004')
   print_attribute("labels", data, 'fields.labels')
   print_attribute("components", data['fields']['components'].map{|c| c['name']})
+  print_attribute("epic", get_epic_name(data))
   print_attribute("sprint", get_last_sprint(data))
 
-  if data['fields'] && data['fields']['description']
-    puts "\nDescription:\n#{data['fields']['description']}"
-  end
+#  Description in too long, find a better way to display this on demand
+#  if data['fields'] && data['fields']['description']
+#    puts "\nDescription:\n#{data['fields']['description']}"
+#  end
   return true
 end
 
