@@ -2,11 +2,12 @@
 A command-line tool for everyday operations in jira
 
 ## Installation
-1. clone this repo
+1. clone the repo
 2. add the repo directory to your path
-3. add your jira username to the IH8_JIRA_USERNAME environment variable
-4. add your jira password to the IH8_JIRA_PASSWORD environment variable
-5. mv config.yml.example to config.yml and put data for your jira instance in it
+3. cd to your repo directory and run "bundle install"
+4. add your jira username to the IH8_JIRA_USERNAME environment variable
+5. add your jira password to the IH8_JIRA_PASSWORD environment variable
+6. mv config.yml.example to config.yml and put data for your jira instance in it
 
 ## Usage
 ### Create a new issues
