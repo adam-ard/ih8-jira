@@ -3,4 +3,4 @@
 ih8_jira_path=`which ih8-jira`
 ih8_jira_dir=`dirname $ih8_jira_path`
 cd $ih8_jira_dir
-bundle exec ruby ih8-jira.rb $@
+bundle exec ruby ih8-jira.rb "$@"
