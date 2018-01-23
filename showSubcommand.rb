@@ -90,7 +90,7 @@ def print_issue(id)
   print_attribute("labels", data, 'fields.labels')
   print_attribute("components", data['fields']['components'].map{|c| c['name']})
   print_attribute("epic", get_epic_name(data))
-  print_attribute("sprint", get_last_sprint(data))
+#  print_attribute("sprint", get_last_sprint(data))
 
 #  Description in too long, find a better way to display this on demand
 #  if data['fields'] && data['fields']['description']
@@ -100,7 +100,7 @@ def print_issue(id)
 end
 
 def print_sprint(assignee, section)
-  sprint_list=jql_query("sprint in OpenSprints() AND (#{$team_query})")
+  sprint_list=jql_query("#{$team_query}")
 
   unless section.nil?
     sprint_list.select! { |x| x[1] == section }
@@ -138,10 +138,10 @@ def print_sprint_list(sprint_list)
     item.sort_by! { |x| x[3] }
     item.each do | in_item |
       color = :green
-      if in_item[4].include? "committed"
+      if in_item[4].include? "any label that I want to highlight"
         color = :red
       end
-      puts "    #{format("%-7s",in_item[0])}".color(color) + " #{format("%11s",in_item[3])} #{format("%-.60s", in_item[2])}"
+      puts "    #{format("%-7s",in_item[0])}".color(color) + " #{format("%18s",in_item[3])} #{format("%-.60s", in_item[2])}"
     end
   end
 end
