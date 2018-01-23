@@ -26,14 +26,25 @@ def get_last_sprint(sprint_string)
 end
 
 def jql_query(jql)
-  form_data={'jql' => jql, 'startAt' => 0, 'maxResults' => -1, 'fields'=> ['summary', 'status', 'assignee', 'labels']}
-  data,err=rest_post_request("rest/api/latest/search/", form_data)
-  if err
-    return []
+  total, max_results=100,100
+  start = 0
+
+  issues = []
+  while start < total do
+    form_data={'jql' => jql, 'startAt' => start, 'maxResults' => max_results, 'fields'=> ['summary', 'status', 'assignee', 'labels']}
+    data,err=rest_post_request("rest/api/latest/search/", form_data)
+    issues.push(*data["issues"])
+    if err
+      return []
+    end
+    total = data["total"]
+    start += max_results
   end
 
+  puts "#{issues.length} Issues"
+
   sprint_list=[]
-  data['issues'].each do | item |
+  issues.each do | item |
     sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee']), item['fields']['labels']]
   end
   sprint_list
@@ -100,7 +111,7 @@ def print_issue(id)
 end
 
 def print_sprint(assignee, section)
-  sprint_list=jql_query("#{$team_query}")
+  sprint_list=jql_query("#{$team_query} AND issuetype != Epic")
 
   unless section.nil?
     sprint_list.select! { |x| x[1] == section }
