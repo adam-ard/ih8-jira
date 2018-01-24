@@ -32,7 +32,7 @@ def jql_query(jql)
 
   issues = []
   while start < total do
-    form_data={'jql' => jql, 'startAt' => start, 'maxResults' => max_results, 'fields'=> ['summary', 'status', 'assignee', 'labels']}
+    form_data={'jql' => jql, 'startAt' => start, 'maxResults' => max_results, 'fields'=> ['summary', 'status', 'assignee', 'labels', 'priority']}
     data,err=rest_post_request("rest/api/latest/search/", form_data)
     issues.push(*data["issues"])
     if err
@@ -46,7 +46,7 @@ def jql_query(jql)
 
   sprint_list=[]
   issues.each do | item |
-    sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee']), item['fields']['labels']]
+    sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee']), item['fields']['labels'], item['fields']['priority']['name']]
   end
   sprint_list
 end
@@ -148,7 +148,7 @@ def print_sprint_list(sprint_list)
     item.sort_by! { |x| x[3] }
     item.each do | in_item |
       color = :green
-      if in_item[4].include? "any label that I want to highlight"
+      if in_item[5] == "Critical"
         color = :red
       end
       puts "    #{format("%-7s",in_item[0])}".color(color) + " #{format("%18s",in_item[3])} #{format("%-.60s", in_item[2])}"
