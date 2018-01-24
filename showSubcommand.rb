@@ -93,7 +93,7 @@ def print_issue(id)
   end
 
   print_attribute("id", id)
-  print_attribute("Summary", data, 'fields.summary')
+  print_attribute("summary", data, 'fields.summary')
   print_attribute("author", data, 'fields.creator.key')
   print_attribute("assignee", data, 'fields.assignee.name')
   print_attribute("status", data, 'fields.status.name')
@@ -103,10 +103,8 @@ def print_issue(id)
   print_attribute("epic", get_epic_name(data))
 #  print_attribute("sprint", get_last_sprint(data))
 
-#  Description in too long, find a better way to display this on demand
-#  if data['fields'] && data['fields']['description']
-#    puts "\nDescription:\n#{data['fields']['description']}"
-#  end
+  puts "\n"
+  print_attribute("description", data, 'fields.description')
   return true
 end
 
