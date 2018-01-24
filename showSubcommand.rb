@@ -1,4 +1,5 @@
 require 'rainbow/ext/string'
+require 'pp'
 
 require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 
@@ -69,8 +70,8 @@ end
 
 def get_epic_name(data)
   id=nil
-  if data['fields'] && data['fields']['customfield_10600']
-    id=data['fields']['customfield_10600']
+  if data['fields'] && data['fields']['customfield_10009']
+    id=data['fields']['customfield_10009']
   else
     return "-"
   end
@@ -79,8 +80,8 @@ def get_epic_name(data)
   if err
     return "ERROR: can't retrieve epic"
   end
-  if data['fields'] && data['fields']['customfield_10601']
-    data['fields']['customfield_10601']
+  if data['fields'] && data['fields']['customfield_10008']
+    data['fields']['customfield_10008']
   else
     "Error: cant retrieve epic"
   end
