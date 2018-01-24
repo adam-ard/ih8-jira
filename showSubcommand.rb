@@ -151,7 +151,7 @@ def print_sprint_list(sprint_list)
       if in_item[5] == "Critical"
         color = :red
       end
-      puts "    #{format("%-7s",in_item[0])}".color(color) + " #{format("%18s",in_item[3])} #{format("%-.60s", in_item[2])}"
+      puts "    #{format("%-10s",in_item[0])}".color(color) + " #{format("%18s",in_item[3])} #{format("%-.60s", in_item[2])}"
     end
   end
 end
