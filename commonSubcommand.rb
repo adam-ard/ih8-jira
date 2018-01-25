@@ -36,7 +36,7 @@ def rest_request(cmd)
   is_error = false
   data = {}
 
-  if res.code == "404"
+  if res.code != "200"
     is_error = true
     p [res.code, res.message, res.class.name]
   end

@@ -8,21 +8,13 @@ $show_usage = 'Usage: ih8-jira show [options]'
 $show_argTable = [[true, 'issue_id', 'i', 'This is the id of the issue you wish to view (ex DEMO-192)'],
                   [true, 'assignee', 'a', 'Filter by assignee name'],
                   [true, 'section', 's', 'Filter by section name'],
-                  [true, 'sprint', 'p', 'Filter by sprint (current, any)', 'current']]
+                  [false, 'ignore_closed', 'i', "Ignore closed issues"]]
 
 def get_assignee(assignee_struct)
   if assignee_struct
     assignee_struct['name']
   else
     '-'
-  end
-end
-
-def get_last_sprint(sprint_string)
-  if sprint_string['fields'] && sprint_string["fields"]["customfield_10007"]
-    sprint_string["fields"]["customfield_10007"][-1].split("[")[1].split(',')[3].split('=')[1]
-  else
-    "-"
   end
 end
 
@@ -44,11 +36,11 @@ def jql_query(jql)
 
   puts "#{issues.length} Issues"
 
-  sprint_list=[]
-  issues.each do | item |
-    sprint_list << [item['key'], item['fields']['status']['name'], item['fields']['summary'], get_assignee(item['fields']['assignee']), item['fields']['labels'], item['fields']['priority']['name']]
+  issue_list=[]
+  issues.each do | issue |
+    issue_list << [issue['key'], issue['fields']['status']['name'], issue['fields']['summary'], get_assignee(issue['fields']['assignee']), issue['fields']['labels'], issue['fields']['priority']['name']]
   end
-  sprint_list
+  issue_list
 end
 
 def print_attribute(name, data, location="")
@@ -107,49 +99,48 @@ def print_issue(id)
   return true
 end
 
-def print_sprint(assignee, section)
-  sprint_list=jql_query("#{$team_query} AND issuetype != Epic")
+def print_issues(assignee, section, ignore_closed)
+  query = "#{$team_query} AND issuetype != Epic AND status != Backlog"
+  if ignore_closed
+    query << " AND status != Closed"
+  end
+  issue_list=jql_query(query)
 
   unless section.nil?
-    sprint_list.select! { |x| x[1] == section }
+    issue_list.select! { |x| x[1] == section }
   end
 
   unless assignee.nil?
-    sprint_list.select! { |x| x[3] == assignee }
+    issue_list.select! { |x| x[3] == assignee }
   end
 
-  print_sprint_list(sprint_list)
+  print_issue_list(issue_list)
 end
 
-def print_backlog(assignee, section)
-  sprint_list=jql_query($team_query)
-
-  sprint_list.select! { |x| x[1] != "Done" }
-  unless section.nil?
-    sprint_list.select! { |x| x[1] == section }
-  end
+def print_backlog(assignee)
+  issue_list=jql_query("#{$team_query} AND status = Backlog AND issuetype != Epic" )
 
   unless assignee.nil?
-    sprint_list.select! { |x| x[3] == assignee }
+    issue_list.select! { |x| x[3] == assignee }
   end
 
-  print_sprint_list(sprint_list)
+  print_issue_list(issue_list)
 end
 
-def print_sprint_list(sprint_list)
+def print_issue_list(issue_list)
   lists = {}
-  $sections.each { |x| lists[x] = sprint_list.select { |y| y[1] == x }}
-  lists.each do | key, item |
-    if item.length != 0
+  $sections.each { |x| lists[x] = issue_list.select { |y| y[1] == x }}
+  lists.each do | key, issue |
+    if issue.length != 0
       puts "  #{key}:"
     end
-    item.sort_by! { |x| x[3] }
-    item.each do | in_item |
+    issue.sort_by! { |x| x[3] }
+    issue.each do | in_issue |
       color = :green
-      if in_item[5] == "Critical"
+      if in_issue[5] == "Critical"
         color = :red
       end
-      puts "    #{format("%-10s",in_item[0])}".color(color) + " #{format("%18s",in_item[3])} #{format("%-.60s", in_item[2])}"
+      puts "    #{format("%-10s",in_issue[0])}".color(color) + " #{format("%18s",in_issue[3])} #{format("%-.60s", in_issue[2])}"
     end
   end
 end
@@ -157,9 +148,9 @@ end
 def handle_show_cmd(options, args)
   if options['issue_id']
     print_issue(options['issue_id'])
-  elsif options['sprint'] == 'current'
-    print_sprint(options['assignee'], options['section'])
+  elsif options['section'] == 'Backlog'
+    print_backlog(options['assignee'])
   else
-    print_backlog(options['assignee'], options['section'])
+    print_issues(options['assignee'], options['section'], options['ignore_closed'])
   end
 end
