@@ -16,7 +16,7 @@ $subcommands={
 }
 
 opw = Optparsewrapper.new()
-opw.setGlobalUsage('Usage: ih8-jira [options] < set | show | new | move | delete | epic >')
+opw.setGlobalUsage('Usage: ih8-jira [options] < set | show | new | move | delete | epics >')
 opw.addSubcommand('show', $show_usage, $show_argTable)
 opw.addSubcommand('set', $set_usage, $set_argTable)
 opw.addSubcommand('new', $new_usage, $new_argTable)
