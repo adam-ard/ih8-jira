@@ -11,14 +11,14 @@ A command-line tool for everyday operations in jira
 
 ## Usage
 ### Create a new issues
-    $ ih8-jira new --summary "This is the summary for my new issue" --assignee=fred --priority="Low" --description="text"
+    $ ih8-jira new --summary "text" --assignee=fred --priority="Low" --description="text"
     DEMO-555
     
 ### Delete an issue
     $ ih8-jira delete DEMO-555
     
 ### Set issue fields
-    $ ih8-jira set --summary "This is the summary for my issue" --assignee=fred --priority="Low" --description="text"
+    $ ih8-jira set --summary "text" --assignee=fred --priority="Low" --description="text"
     
 ### Show issue details
     $ ih8-jira show --issue_id=DEMO-555
