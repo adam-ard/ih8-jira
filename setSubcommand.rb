@@ -3,9 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/commonSubcommand')
 $set_usage='Usage: ih8-jira set <issue_id> [options]'
 $set_argTable=[[true, 'assignee', 'a', 'new assignee'],
                [true, 'summary', 's', 'new summary'],
-               [true, 'estimate', 'e', 'new estimate'],
-               [true, 'component', 'c', 'new component'],
-               [true, 'sprint', 'p', 'new sprint (backlog or current)']]
+               [true, 'priority', 'p', 'new priority'],
+               [true, 'description', 'd', 'new description']]
 
 
 def handle_set_mode(options, args)
@@ -15,49 +14,23 @@ def handle_set_mode(options, args)
   end
 
   form_data={}
-  if options['estimate']
-    update(form_data, { 'fields'=> {'customfield_10004' => options['estimate'].to_i }})
+  if options['priority']
+    update(form_data, { 'fields'=> {'priority' => {'name' => options['priority'] }}})
   end
   if options['assignee']
     update(form_data, { 'fields'=> {'assignee' => {'name' => options['assignee']}}})
   end
+  if options['description']
+    update(form_data, { 'fields'=> {'description' => options['description']}})
+  end
   if options['summary']
     update(form_data, { 'fields'=> {'summary' => options['summary']}})
-  end
-  if options['component']
-    update(form_data, { 'fields'=> {'components' => [{"name":options['component']}]}})
   end
 
   unless form_data == {}
     data,err=rest_put_request("rest/api/latest/issue/#{args[0]}", form_data)
     if err
       return false
-    end
-  end
-
-  if options['sprint']
-    data,err=rest_get_request("rest/greenhopper/latest/rapidview")
-    if err
-      return false
-    end
-    data['views'].each() do | x |
-      if x['name'] == $board_name
-        data2,err=rest_get_request("rest/greenhopper/latest/sprintquery/#{x['id']}")
-        if err
-          return false
-        end
-        data2['sprints'].each() do | y |
-          if y['state'] == 'ACTIVE'
-            if options['sprint'] == "current"
-              data3,err=rest_post_request("rest/agile/1.0/sprint/#{y['id']}/issue", {"issues"=>[args[0]]})
-              return !err
-            else
-              data3,err=rest_post_request("rest/agile/1.0/backlog/issue", {"issues"=>[args[0]]})
-              return !err
-            end
-          end
-        end
-      end
     end
   end
 end

@@ -98,11 +98,9 @@ def print_issue(id)
   print_attribute("author", data, 'fields.creator.key')
   print_attribute("assignee", data, 'fields.assignee.name')
   print_attribute("status", data, 'fields.status.name')
-  print_attribute("estimate", data, 'fields.customfield_10004')
+  print_attribute("priority", data, 'fields.priority.name')
   print_attribute("labels", data, 'fields.labels')
-  print_attribute("components", data['fields']['components'].map{|c| c['name']})
   print_attribute("epic", get_epic_name(data))
-#  print_attribute("sprint", get_last_sprint(data))
 
   puts "\n"
   print_attribute("description", data, 'fields.description')
