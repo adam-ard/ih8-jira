@@ -26,8 +26,8 @@ A command-line tool for everyday operations in jira
 ### Show current issues for project
     $ ih8-jira show
     
-### Show current issues for project, excluding closed items
-    $ ih8-jira show --ignore_closed
+### Show current issues for project, excluding closed items and backlog items
+    $ ih8-jira show --ignore_closed --ignore_backlog
     
 ### Show project backlog
     $ ih8-jira show --section="Backlog"

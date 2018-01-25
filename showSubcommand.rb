@@ -8,7 +8,8 @@ $show_usage = 'Usage: ih8-jira show [options]'
 $show_argTable = [[true, 'issue_id', 'i', 'This is the id of the issue you wish to view (ex DEMO-192)'],
                   [true, 'assignee', 'a', 'Filter by assignee name'],
                   [true, 'section', 's', 'Filter by section name'],
-                  [false, 'ignore_closed', 'i', "Ignore closed issues"]]
+                  [false, 'ignore_closed', 'c', "Ignore closed issues"],
+                  [false, 'ignore_backlog', 'b', "Ignore backlog issues"]]
 
 def get_assignee(assignee_struct)
   if assignee_struct
@@ -99,26 +100,19 @@ def print_issue(id)
   return true
 end
 
-def print_issues(assignee, section, ignore_closed)
-  query = "#{$team_query} AND issuetype != Epic AND status != Backlog"
+def print_issues(assignee, section, ignore_closed, ignore_backlog)
+  query = "#{$team_query} AND issuetype != Epic"
   if ignore_closed
     query << " AND status != Closed"
+  end
+  if ignore_backlog
+    query << " AND status != Backlog"
   end
   issue_list=jql_query(query)
 
   unless section.nil?
     issue_list.select! { |x| x[1] == section }
   end
-
-  unless assignee.nil?
-    issue_list.select! { |x| x[3] == assignee }
-  end
-
-  print_issue_list(issue_list)
-end
-
-def print_backlog(assignee)
-  issue_list=jql_query("#{$team_query} AND status = Backlog AND issuetype != Epic" )
 
   unless assignee.nil?
     issue_list.select! { |x| x[3] == assignee }
@@ -148,9 +142,7 @@ end
 def handle_show_cmd(options, args)
   if options['issue_id']
     print_issue(options['issue_id'])
-  elsif options['section'] == 'Backlog'
-    print_backlog(options['assignee'])
   else
-    print_issues(options['assignee'], options['section'], options['ignore_closed'])
+    print_issues(options['assignee'], options['section'], options['ignore_closed'], options['ignore_backlog'])
   end
 end
